@@ -9,9 +9,25 @@ export default function Register({ onRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const user = { id: Date.now(), name: name || email.split('@')[0], email }
-    onRegister(user)
-    navigate('/dashboard')
+    // call backend register
+    fetch('http://localhost:8080/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    })
+    .then(async r => {
+      const body = await r.json().catch(() => ({}))
+      if (r.ok && body.token) {
+        const user = { name: body.name, email: body.email, token: body.token }
+        localStorage.setItem('token', body.token)
+        onRegister(user)
+        navigate('/dashboard')
+      } else {
+        const msg = body.message || (body.errors ? JSON.stringify(body.errors) : 'Registration failed')
+        alert(msg)
+      }
+    })
+    .catch(() => alert('Registration error'))
   }
 
   return (
