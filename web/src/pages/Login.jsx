@@ -8,10 +8,25 @@ export default function Login({ onLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // mock login
-    const user = { id: 1, name: email.split('@')[0] || 'User', email }
-    onLogin(user)
-    navigate('/dashboard')
+    // call backend login
+    fetch('http://localhost:8080/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    .then(async r => {
+      const body = await r.json().catch(() => ({}))
+      if (r.ok && body.token) {
+        const user = { name: body.name, email: body.email, token: body.token }
+        localStorage.setItem('token', body.token)
+        onLogin(user)
+        navigate('/dashboard')
+      } else {
+        const msg = body.message || (body.errors ? JSON.stringify(body.errors) : 'Login failed')
+        alert(msg)
+      }
+    })
+    .catch(() => alert('Login error'))
   }
 
   return (

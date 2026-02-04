@@ -35,8 +35,15 @@
 
 .card {
   padding: 2em;
+  background: var(--surface);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(15,30,20,0.04);
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--muted);
 }
+
+main { padding-top: 1.25rem }
+
+.page.container { text-align: left }
