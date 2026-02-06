@@ -9,11 +9,15 @@ import com.example.backend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -41,7 +45,9 @@ public class AuthService {
     public AuthResponse login(AuthRequest req) {
         User u = userRepository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new com.example.backend.exception.InvalidCredentialsException("Invalid email or password"));
-        if (!passwordEncoder.matches(req.getPassword(), u.getPassword())) {
+        boolean matches = passwordEncoder.matches(req.getPassword(), u.getPassword());
+        logger.debug("Login attempt for email {}: password matches={}", req.getEmail(), matches);
+        if (!matches) {
             throw new com.example.backend.exception.InvalidCredentialsException("Invalid email or password");
         }
         String token = jwtUtil.generateToken(u.getEmail());

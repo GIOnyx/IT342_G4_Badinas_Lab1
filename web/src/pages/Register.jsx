@@ -9,8 +9,9 @@ export default function Register({ onRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault()
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3060'
     // call backend register
-    fetch('http://localhost:8080/api/auth/register', {
+    fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
