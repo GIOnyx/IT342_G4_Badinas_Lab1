@@ -1,0 +1,48 @@
+# Operating system
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Java / Maven
+/target/
+/build/
+*.class
+*.jar
+.mvn/
+
+# Node
+/node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.jks
+*.key
+
+# Application properties (local secrets)
+/backend/src/main/resources/application.properties
+**/application-*.properties
+
+# IDE output
+/out/
+
+# Optional: ignore local run scripts output
+run-all.exe

@@ -8,8 +8,9 @@ export default function Login({ onLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault()
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3060'
     // call backend login
-    fetch('http://localhost:8080/api/auth/login', {
+    fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
