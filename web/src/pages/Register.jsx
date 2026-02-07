@@ -22,7 +22,7 @@ export default function Register({ onRegister }) {
         const user = { name: body.name, email: body.email, token: body.token }
         localStorage.setItem('token', body.token)
         onRegister(user)
-        navigate('/dashboard')
+        navigate('/ingredients')
       } else {
         const msg = body.message || (body.errors ? JSON.stringify(body.errors) : 'Registration failed')
         alert(msg)
@@ -32,20 +32,23 @@ export default function Register({ onRegister }) {
   }
 
   return (
-    <div className="page container">
-      <h2>Register</h2>
-      <form className="form" onSubmit={handleSubmit}>
-        <label>Name
-          <input value={name} onChange={e => setName(e.target.value)} required />
-        </label>
-        <label>Email
-          <input value={email} onChange={e => setEmail(e.target.value)} type="email" required />
-        </label>
-        <label>Password
-          <input value={password} onChange={e => setPassword(e.target.value)} type="password" required />
-        </label>
-        <button type="submit">Create account</button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Create Account</h2>
+        <form className="form" onSubmit={handleSubmit}>
+          <label>Name
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="Your name" required />
+          </label>
+          <label>Email
+            <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@example.com" required />
+          </label>
+          <label>Password
+            <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="••••••••" required />
+          </label>
+          <button type="submit">Create account</button>
+        </form>
+        <div className="auth-switch">Already have an account? <a href="/login">Sign in</a></div>
+      </div>
     </div>
   )
 }

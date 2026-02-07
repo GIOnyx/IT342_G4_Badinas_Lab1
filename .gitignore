@@ -16,6 +16,7 @@ Thumbs.db
 /target/
 /build/
 *.class
+.env
 *.jar
 .mvn/
 

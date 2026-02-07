@@ -1,70 +1,155 @@
+/* ── Design tokens ─────────────────────────────────── */
 :root {
-  --bg: #f3fff6; /* very light green */
-  --surface: #ffffff;
-  --text: #0b3a2e; /* dark green text */
-  --muted: #4b7562;
-  --primary: #2f855a; /* primary green */
-  --primary-600: #2e7d53;
-  --accent: #9fe6b8;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg:          #f0faf3;
+  --surface:     #ffffff;
+  --surface-alt: #e8f5ec;
+  --text:        #1a3a2a;
+  --text-light:  #4b7562;
+  --muted:       #7fa893;
+  --border:      #c8e6d0;
 
+  --green-50:    #ecfdf5;
+  --green-100:   #d1fae5;
+  --green-200:   #a7f3d0;
+  --green-300:   #6ee7b7;
+  --green-400:   #34d399;
+  --green-500:   #10b981;
+  --green-600:   #059669;
+  --green-700:   #047857;
+  --green-800:   #065f46;
+  --green-900:   #064e3b;
+
+  --primary:     #059669;
+  --primary-hover:#047857;
+  --primary-light:#d1fae5;
+  --accent:      #34d399;
+  --danger:      #ef4444;
+
+  --sidebar-w:   240px;
+  --radius:      10px;
+  --radius-sm:   6px;
+  --shadow:      0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.07);
+
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
   color-scheme: light;
   color: var(--text);
-  background-color: var(--bg);
-
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: var(--primary-600);
-  text-decoration: inherit;
-}
-a:hover {
-  color: var(--primary);
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
   margin: 0;
-  min-width: 320px;
   min-height: 100vh;
+  background: var(--bg);
   color: var(--text);
-  background-color: var(--bg);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+/* ── Typography ───────────────────────────────────── */
+h1, h2, h3, h4 { color: var(--green-900); margin:0 0 .5rem; font-weight:700; }
+h1 { font-size:1.75rem }
+h2 { font-size:1.4rem }
+h3 { font-size:1.15rem }
+h4 { font-size:1rem; color: var(--text-light); text-transform:uppercase; letter-spacing:.04em; font-weight:600 }
+p  { margin:0 0 .75rem; color: var(--text-light) }
 
+a { color: var(--primary); text-decoration:none; font-weight:500; transition:color .15s }
+a:hover { color: var(--primary-hover) }
+
+/* ── Buttons ──────────────────────────────────────── */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--primary);
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.18s, transform 0.08s;
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:.4em;
+  border:none; border-radius:var(--radius-sm);
+  padding:.55em 1.1em;
+  font-size:.9rem; font-weight:600; font-family:inherit;
+  background:var(--primary); color:#fff;
+  cursor:pointer;
+  transition:background .15s, transform .08s, box-shadow .15s;
 }
-button:hover {
-  background-color: var(--primary-600);
-  transform: translateY(-1px);
+button:hover { background:var(--primary-hover); transform:translateY(-1px); box-shadow:var(--shadow) }
+button:active { transform:translateY(0) }
+button:focus-visible { outline:3px solid var(--green-300); outline-offset:2px }
+
+button.secondary {
+  background:var(--surface); color:var(--primary); border:1px solid var(--border);
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button.secondary:hover { background:var(--green-50); border-color:var(--green-300) }
+
+button.ghost { background:transparent; color:var(--text-light); padding:.4em .7em }
+button.ghost:hover { background:var(--green-50); color:var(--primary) }
+button.ghost.active { background:var(--primary-light); color:var(--primary); font-weight:700 }
+
+button.danger { background:var(--danger) }
+button.danger:hover { background:#dc2626 }
+
+button.sm { font-size:.8rem; padding:.35em .75em }
+button.lg { font-size:1rem; padding:.7em 1.4em }
+
+/* ── Inputs ───────────────────────────────────────── */
+input, select, textarea {
+  padding:.6rem .85rem;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:.95rem; font-family:inherit;
+  background:var(--surface);
+  color:var(--text);
+  transition:border-color .15s, box-shadow .15s;
+  width:100%;
+}
+input:focus, select:focus, textarea:focus {
+  outline:none;
+  border-color:var(--green-400);
+  box-shadow:0 0 0 3px rgba(16,185,129,.15);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    /* same light theme */
-  }
+/* ── Card ─────────────────────────────────────────── */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:box-shadow .2s, transform .15s, border-color .2s;
 }
+.card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px) }
+.card.selected { border-color:var(--green-400); background:var(--green-50) }
+.card .card-body { padding:1rem }
+.card .card-img { width:100%; height:160px; object-fit:cover }
+
+/* ── Error ────────────────────────────────────────── */
+.error {
+  background:#fef2f2; color:#991b1b; border:1px solid #fecaca;
+  border-radius:var(--radius-sm); padding:.65rem 1rem; margin:.75rem 0; font-size:.9rem;
+}
+
+/* ── Badge / chip ─────────────────────────────────── */
+.chip {
+  display:inline-flex; align-items:center; gap:.3em;
+  background:var(--green-100); color:var(--green-800);
+  border-radius:999px; padding:.25em .7em; font-size:.8rem; font-weight:600;
+}
+.chip .chip-x {
+  cursor:pointer; background:none; border:none; color:var(--green-700);
+  font-size:.85rem; padding:0; line-height:1; margin-left:.15em;
+}
+.chip .chip-x:hover { color:var(--danger) }
+
+/* ── Utilities ────────────────────────────────────── */
+.muted { color:var(--muted) }
+.text-sm { font-size:.85rem }
+.text-center { text-align:center }
+.mt-1 { margin-top:.5rem }
+.mt-2 { margin-top:1rem }
+.mt-3 { margin-top:1.5rem }
+.mb-1 { margin-bottom:.5rem }
+.gap-sm { gap:.5rem }
+.gap-md { gap:.75rem }
+.gap-lg { gap:1.25rem }
