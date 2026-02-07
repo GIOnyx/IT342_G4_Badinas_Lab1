@@ -1,17 +1,26 @@
 import { useParams } from 'react-router-dom'
-import { items } from '../mock/data'
+import { useEffect, useState } from 'react'
+import api from '../api'
 
 export default function ItemDetails() {
   const { id } = useParams()
-  const it = items.find(i => String(i.id) === String(id))
+  const [item, setItem] = useState(null)
+  const [error, setError] = useState(null)
 
-  if (!it) return <div className="page container"><h2>Not found</h2></div>
+  useEffect(() => {
+    api(`/api/items/${id}`)
+      .then(setItem)
+      .catch(err => setError(err.body || err.message))
+  }, [id])
+
+  if (error) return <div className="page"><h2>Error</h2><div className="error">{String(error)}</div></div>
+  if (!item) return <div className="page"><p>Loading...</p></div>
 
   return (
-    <div className="page container">
-      <h2>{it.title}</h2>
-      <p className="muted">{it.subtitle}</p>
-      <p>{it.content}</p>
+    <div className="page">
+      <h2>{item.title}</h2>
+      <p className="muted">{item.subtitle}</p>
+      <p>{item.content}</p>
     </div>
   )
 }

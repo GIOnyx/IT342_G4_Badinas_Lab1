@@ -21,7 +21,7 @@ export default function Login({ onLogin }) {
         const user = { name: body.name, email: body.email, token: body.token }
         localStorage.setItem('token', body.token)
         onLogin(user)
-        navigate('/dashboard')
+        navigate('/ingredients')
       } else {
         const msg = body.message || (body.errors ? JSON.stringify(body.errors) : 'Login failed')
         alert(msg)
@@ -31,17 +31,20 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="page container">
-      <h2>Login</h2>
-      <form className="form" onSubmit={handleSubmit}>
-        <label>Email
-          <input value={email} onChange={e => setEmail(e.target.value)} type="email" required />
-        </label>
-        <label>Password
-          <input value={password} onChange={e => setPassword(e.target.value)} type="password" required />
-        </label>
-        <button type="submit">Sign in</button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Welcome Back</h2>
+        <form className="form" onSubmit={handleSubmit}>
+          <label>Email
+            <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@example.com" required />
+          </label>
+          <label>Password
+            <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="••••••••" required />
+          </label>
+          <button type="submit">Sign in</button>
+        </form>
+        <div className="auth-switch">Don't have an account? <a href="/register">Register</a></div>
+      </div>
     </div>
   )
 }

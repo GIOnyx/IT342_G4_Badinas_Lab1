@@ -1,49 +1,630 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* ── App shell: sidebar + main ────────────────────── */
+#app-root {
+  display: flex;
+  min-height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ── Sidebar ──────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: linear-gradient(180deg, var(--green-600) 0%, var(--green-700) 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0;
+  z-index: 50;
+  box-shadow: 2px 0 12px rgba(0,0,0,.08);
+  overflow-y: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.sidebar .brand {
+  padding: 0 1.25rem .75rem;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  margin-bottom: .75rem;
+}
+.sidebar .brand a {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+.sidebar .brand .brand-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 50%; /* makes it circular */
+  overflow: hidden;   /* ensures the image is clipped */
 }
 
-.card {
-  padding: 2em;
+
+.sidebar .brand .brand-logo  img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* keeps aspect ratio while filling circle */
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 0 .5rem;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: .6em;
+  padding: .6rem .85rem;
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,.8);
+  font-size: .92rem;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  text-decoration: none;
+}
+.sidebar nav a:hover {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+}
+.sidebar nav a.active {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-weight: 700;
+}
+
+.sidebar .nav-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: .85;
+}
+
+.sidebar .sidebar-footer {
+  padding: .75rem 1rem;
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin-top: auto;
+  font-size: .85rem;
+}
+.sidebar .sidebar-footer .nav-user {
+  color: var(--green-200);
+  display: block;
+  margin-bottom: .4rem;
+  font-weight: 600;
+}
+.sidebar .sidebar-footer button {
+  background: rgba(255,255,255,.12);
+  border: none;
+  color: rgba(255,255,255,.85);
+  font-size: .85rem;
+  padding: .4em .8em;
+  width: 100%;
+}
+.sidebar .sidebar-footer button:hover {
+  background: rgba(255,255,255,.2);
+  color: #fff;
+}
+
+/* ── Main content ─────────────────────────────────── */
+.main-content {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 2rem 2.5rem;
+  min-height: 100vh;
+}
+
+/* ── Page containers ──────────────────────────────── */
+.page { max-width: 960px }
+.page-wide { max-width: 1200px }
+
+/* ── Auth pages (Login / Register) ────────────────── */
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+.auth-card {
   background: var(--surface);
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(15,30,20,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
 }
-
-.read-the-docs {
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.auth-card .form {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+.auth-card label {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+.auth-card button[type="submit"] {
+  margin-top: .5rem;
+  width: 100%;
+  padding: .7em;
+  font-size: 1rem;
+}
+.auth-card .auth-switch {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: .88rem;
   color: var(--muted);
 }
 
-main { padding-top: 1.25rem }
+/* ── Favorites ────────────────────────────────────── */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: .75rem;
+  margin-top: 1rem;
+}
+.favorite-card .card-body { padding: 1rem; }
+.favorite-card .fav-title { font-weight: 700; font-size: .95rem; text-transform: capitalize; }
+.favorite-card .fav-subtitle { font-size: .82rem; color: var(--muted); margin: .25rem 0 .6rem; }
 
-.page.container { text-align: left }
+/* ── Items list ───────────────────────────────────── */
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: .75rem;
+}
+.item {
+  padding: .85rem 1rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s, transform .15s;
+}
+.item:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.item a { color: inherit; text-decoration: none; display: block; }
+
+/* ── Ingredients page ─────────────────────────────── */
+.ingredients-page { max-width: 1200px; }
+.ingredients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.ingredients-header h2 { margin: 0; }
+.ingredients-actions {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.ingredients-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Category sidebar */
+.cat-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.cat-sidebar h4 {
+  margin: 0 0 .75rem;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.cat-sidebar button {
+  text-align: left;
+  text-transform: capitalize;
+  justify-content: flex-start;
+  font-size: .9rem;
+  padding: .65rem .85rem;
+  border-radius: var(--radius-sm);
+}
+.cat-sidebar button.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Main ingredients area */
+.ingredients-main { flex: 1; }
+
+.selected-section {
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.selected-section .selected-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+.selected-section .selected-header h4 {
+  margin: 0;
+  color: var(--green-800);
+  font-size: .95rem;
+}
+.selected-section .selected-count {
+  background: var(--primary);
+  color: #fff;
+  padding: .2em .6em;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 700;
+}
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.ingredients-search {
+  margin-bottom: 1.25rem;
+}
+.ingredients-search input {
+  width: 100%;
+  padding: .7rem 1rem;
+  font-size: .95rem;
+  border-radius: var(--radius);
+}
+
+.ingredient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+/* Limit ingredient-search result height so the Recipes header stays visible */
+.ingredient-search .ingredient-grid {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: .5rem;
+}
+
+/* Ensure recipes section starts on new line with proper spacing */
+.recipes-section {
+  margin-top: 2rem;
+  clear: both;
+}
+.ingredient-card {
+  cursor: pointer;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  position: relative;
+  transition: all .2s;
+  background: var(--surface);
+  border: 2px solid var(--border);
+}
+.ingredient-card:hover {
+  border-color: var(--green-400);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.1);
+}
+.ingredient-card.selected {
+  border-color: var(--primary);
+  background: var(--green-50);
+}
+.ingredient-card .ing-check {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all .2s;
+}
+.ingredient-card.selected .ing-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.ingredient-card .ing-name {
+  font-weight: 700;
+  text-transform: capitalize;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: .3rem;
+}
+.ingredient-card .ing-aisle {
+  font-size: .82rem;
+  color: var(--muted);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+.empty-state p { margin: .5rem 0; }
+
+/* ── Recipe grid ──────────────────────────────────── */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.recipe-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.recipe-card .card-body { padding: .85rem }
+.recipe-card .recipe-title { font-weight: 700; font-size: .95rem; margin-bottom: .25rem }
+.recipe-card .recipe-meta { font-size: .82rem; color: var(--muted) }
+
+/* ── Form (general) ──────────────────────────────── */
+.form { display:flex; flex-direction:column; gap:.75rem; max-width:420px; }
+.form label { display:flex; flex-direction:column; gap:.25rem; text-align:left; font-size:.9rem; font-weight:600; color:var(--text-light) }
+.form button { align-self:flex-start }
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; padding: .75rem 0; }
+  .sidebar .brand span,
+  .sidebar nav a span,
+  .sidebar .sidebar-footer .nav-user,
+  .sidebar .sidebar-footer span { display: none; }
+  .sidebar nav a { justify-content: center; padding: .6rem; }
+  .sidebar .brand { text-align: center; }
+  .main-content { margin-left: 60px; padding: 1.25rem; }
+  .ingredients-layout { flex-direction: column; }
+  .cat-sidebar { flex-direction: row; flex-wrap: wrap; min-width: 0; }
+}
+/* ── Landing Page ─────────────────────────────────── */
+.landing-page {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  overflow-x: hidden;
+}
+
+/* Landing Navigation */
+.landing-nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+.landing-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.landing-logo {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--green-700);
+}
+.logo-icon {
+  font-size: 2rem;
+}
+.logo-text {
+  letter-spacing: -.02em;
+}
+.landing-nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.nav-link {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  font-size: .95rem;
+  padding: .5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all .2s;
+}
+.nav-link:hover {
+  color: var(--green-700);
+  background: var(--green-50);
+}
+.nav-link-primary {
+  background: var(--green-600);
+  color: white;
+}
+.nav-link-primary:hover {
+  background: var(--green-700);
+  color: white;
+}
+
+/* Hero Section */
+.landing-hero {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+}
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn-hero-primary,
+.btn-hero-secondary {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all .2s;
+  border: 2px solid transparent;
+}
+.btn-hero-primary {
+  background: var(--green-600);
+  color: white;
+}
+.btn-hero-primary:hover {
+  background: var(--green-700);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 139, 34, .3);
+}
+.btn-hero-secondary {
+  background: white;
+  color: var(--green-700);
+  border-color: var(--green-600);
+}
+.btn-hero-secondary:hover {
+  background: var(--green-50);
+  transform: translateY(-2px);
+}
+
+/* About/Features Section */
+.landing-section {
+  padding: 5rem 2rem;
+  background: white;
+  width: 100%;
+}
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 3rem;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.feature-card {
+  text-align: center;
+  padding: 2rem;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 1px solid #e0e0e0;
+  transition: all .3s;
+}
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+  border-color: var(--green-300);
+}
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: .75rem;
+}
+.feature-card p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Footer */
+.landing-footer {
+  background: var(--text);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  font-size: .9rem;
+  width: 100%;
+}
+
+/* Responsive Landing */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  .landing-nav-links {
+    gap: 1rem;
+  }
+  .nav-link {
+    padding: .4rem .8rem;
+    font-size: .9rem;
+  }
+  .landing-nav-container {
+    padding: 0 1rem;
+  }
+  .hero-content {
+    padding: 3rem 1.5rem;
+  }
+}
