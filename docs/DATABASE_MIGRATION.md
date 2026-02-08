@@ -1,8 +1,20 @@
-# Database Schema Update
+# Database Schema Management
 
-## New Tables Added
+## Overview
 
-Two new tables have been created to properly store user favorites:
+This project uses **Flyway** for automated database migrations, ensuring consistent schema updates across all environments. Migrations run automatically on application startup.
+
+## Migration Strategy
+
+### Automated with Flyway
+All database schema changes are managed through versioned SQL migration scripts located in:
+```
+backend/src/main/resources/db/migration/
+```
+
+Flyway automatically executes pending migrations when the application starts, eliminating the need for manual SQL execution.
+
+## Current Schema Tables
 
 ### 1. `user_ingredients` table
 Stores ingredients that users have selected/favorited:
@@ -24,26 +36,37 @@ Stores recipes that users have saved as favorites:
 - `missed_ingredients` - Count of ingredients the user needs
 - `created_at` - Timestamp when saved
 
-## How to Apply the Migration
+## How Migrations Work
 
-### Using phpMyAdmin (XAMPP):
-1. Open phpMyAdmin (http://localhost/phpmyadmin)
-2. Select your database (e.g., `miniapp` or whatever you named it)
-3. Click the "SQL" tab
-4. Copy the contents of `docs/database-migration.sql`
-5. Paste into the SQL query box
-6. Click "Go" to execute
+### Automatic Migration (Recommended)
+1. Ensure your database connection is configured in `application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/your_database_name
+   spring.datasource.username=root
+   spring.datasource.password=
+   ```
+2. Start the Spring Boot application
+3. Flyway automatically detects and runs pending migrations
+4. Check logs for migration status:
+   ```
+   Flyway: Successfully applied 2 migrations
+   ```
 
-### Using MySQL Workbench:
-1. Open MySQL Workbench
-2. Connect to your local MySQL server
-3. Open the SQL script: `docs/database-migration.sql`
-4. Execute the script
+### Migration Files
+- **V1__Create_user_ingredients_table.sql** - Creates user_ingredients table
+- **V2__Create_user_recipes_table.sql** - Creates user_recipes table
 
-### Using Command Line:
-```bash
-mysql -u root -p your_database_name < docs/database-migration.sql
+### Manual Migration (Legacy - Not Recommended)
+If you prefer manual execution, the migration SQL is also available in:
 ```
+docs/database-migration.sql
+```
+
+However, this approach is deprecated in favor of automated Flyway migrations for better:
+- Version control
+- Repeatability
+- Error handling
+- Production deployment
 
 ## Backend Changes
 
@@ -79,11 +102,35 @@ mysql -u root -p your_database_name < docs/database-migration.sql
 ### User Ingredients:
 - `GET /api/user-ingredients` - Get all saved ingredients for current user
 - `POST /api/user-ingredients` - Save an ingredient
-- `DELETE /api/user-ingredients/{id}` - Remove by database ID
-- `DELETE /api/user-ingredients/spoonacular/{spoonacularId}` - Remove by Spoonacular ID
+- `DELsetting up Flyway:
+1. Configure your database connection in `application.properties`
+2. Start the backend server - migrations run automatically
+3. Verify migration success in application logs
+4. Test saving recipes from Ingredients or Recipes pages
+5. Check Favorites page to see saved recipes
 
-### User Recipes:
-- `GET /api/user-recipes` - Get all saved recipes for current user
+## Configuration
+
+Flyway is configured in `application.properties`:
+```properties
+spring.flyway.enabled=true
+spring.flyway.baseline-on-migrate=true
+spring.flyway.locations=classpath:db/migration
+```
+
+### JPA Configuration
+```properties
+spring.jpa.hibernate.ddl-auto=validate
+```
+Set to `validate` to ensure Flyway manages all schema changes.
+
+## Migration Best Practices
+
+1. **Never modify existing migrations** - Create new versioned migrations instead
+2. **Test migrations locally** before deploying to production
+3. **Use meaningful version numbers** - V1, V2, V3... for sequential changes
+4. **Include rollback plans** - Document how to reverse changes if needed
+5. **Keep migrations idempotent** - Use `IF NOT EXISTS` where appropriatecipes for current user
 - `POST /api/user-recipes` - Save a recipe
 - `DELETE /api/user-recipes/{id}` - Remove by database ID
 - `DELETE /api/user-recipes/spoonacular/{spoonacularRecipeId}` - Remove by Spoonacular ID

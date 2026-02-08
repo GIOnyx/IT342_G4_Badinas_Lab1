@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${frontend.origin:http://localhost:5174}")
+    @Value("${frontend.origin:http://localhost:5173}")
     private String frontendOrigin;
 
     @Override
