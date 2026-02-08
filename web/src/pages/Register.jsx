@@ -9,7 +9,7 @@ export default function Register({ onRegister }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3060'
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
     // call backend register
     fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',

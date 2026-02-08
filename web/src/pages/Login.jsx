@@ -8,7 +8,7 @@ export default function Login({ onLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3060'
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
     // call backend login
     fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',

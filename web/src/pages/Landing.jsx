@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import '../styles.css'
 
 export default function Landing() {
   return (
@@ -9,8 +8,8 @@ export default function Landing() {
         <nav className="landing-nav">
           <div className="landing-nav-container">
             <div className="landing-logo">
-              <span className="logo-icon">🍳</span>
-              <span className="logo-text">RecipeHub</span>
+              <a href="\src\assets\logo.svg"></a>
+              <span className="logo-text">InStock</span>
             </div>
             <div className="landing-nav-links">
               <a href="#about" className="nav-link">About</a>
@@ -39,17 +38,17 @@ export default function Landing() {
           <h2 className="section-title">How It Works</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🥗</div>
+              <div className="feature-icon"></div>
               <h3>Select Ingredients</h3>
               <p>Browse through categories and pick ingredients you have available</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🔍</div>
+              <div className="feature-icon"></div>
               <h3>Find Recipes</h3>
               <p>Discover recipes that match your selected ingredients instantly</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">❤️</div>
+              <div className="feature-icon"></div>
               <h3>Save Favorites</h3>
               <p>Build your personal collection of favorite recipes for quick access</p>
             </div>
@@ -59,7 +58,7 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="landing-footer">
-        <p>&copy; 2026 RecipeHub. All rights reserved.</p>
+        <p>&copy; 2026 InStock. All rights reserved.</p>
       </footer>
     </div>
   )
