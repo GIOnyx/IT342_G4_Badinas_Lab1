@@ -3,91 +3,57 @@
 **Contents**
 - `backend/` — Spring Boot REST API (Maven)
 - `web/` — React + Vite frontend
-- `mobile/` — (mobile client folder)
+# MiniApp — Login/Register Demo
 
-## Project description
+This repository is a small demo focused on user authentication (register, login, validate, logout). It is intentionally minimal — the purpose is to demonstrate the authentication flow, not to be a full product.
 
-InStock is a recipe matching app that is aimed to reduce fodd waste. It allows the user to select ingredients that they have in stock and the system suggests matching recipes.
+Contents
+- `backend/` — Spring Boot REST API (Maven)
+- `web/` — React + Vite frontend
 
-## Technologies used
+Quick notes about auth in this demo
+- The backend sets an HttpOnly cookie named `token` on successful login/register.
+- The frontend uses `fetch(..., { credentials: 'include' })` and the Vite dev proxy so browser requests include the cookie in development.
+- For production you must use HTTPS and set the cookie `Secure` and rotate `jwt.secret`.
 
-- Backend: Spring Boot 3, Spring Web, Spring Data JPA, Spring Security, jjwt, MySQL (XAMPP testing)
-- Build: Maven
-- Frontend: React, Vite, react-router-dom
-- Mobile: (placeholder) — mobile client folder exists
-- Dev tools: Lombok, Spring Boot DevTools
+Requirements
+- Java 17
+- Node.js & npm
 
-## Steps to run backend
+Run the backend (development)
+1. From repository root:
 
-1. Ensure Java 17 and Maven are installed.
-	 - Check with `java -version` and `mvn -v`.
-2. Start MySQL (XAMPP Control Panel) and create the database and dedicated user:
-
-```sql
-CREATE DATABASE lab1_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'lab1'@'localhost' IDENTIFIED BY 'secure_password';
-GRANT ALL PRIVILEGES ON lab1_db.* TO 'lab1'@'localhost';
-FLUSH PRIVILEGES;
+```powershell
+cd backend
+.\mvnw.cmd spring-boot:run
 ```
 
-3. Update `backend/src/main/resources/application.properties` with your MySQL username/password and change `jwt.secret` to a secure value.
+The backend runs on port `8080` by default.
 
-4. From the repository root run:
-
-```bash
-mvn -f backend clean package
-mvn -f backend spring-boot:run
-```
-
-The backend will start on port `8080` by default.
-
-## Steps to run web app
-
-1. From the `web/` folder install dependencies and start the dev server:
+Run the frontend (development)
+1. From repository root:
 
 ```bash
-# from repository root
 cd web
 npm install
 npm run dev
 ```
 
-2. Open the frontend in your browser (`http://localhost:5174` by default when Vite runs).
+2. Vite will print the local URL (typically `http://localhost:5173` or `5174`). The frontend uses a proxy so API requests to `/api` are forwarded to the backend and cookies behave like same-origin in dev.
 
-3. Register and login using the forms; the frontend will POST to `http://localhost:8080/api/auth/...` and store a JWT in `localStorage`.
+Testing the demo (browser)
+1. Open the frontend URL in a browser.
+2. Register a new user using the Register form.
+3. On successful register/login the backend response will include a `Set-Cookie: token=...` header. Confirm in DevTools → Network.
+4. Subsequent requests from the frontend call `/api/auth/validate` with `credentials: 'include'`. Validate should return 200 and your user info when the cookie is present.
 
+If you see 403/401 on `/api/auth/validate`:
+- Ensure the frontend calls use `credentials: 'include'` (the demo already does this).
+- Make sure you run the frontend via Vite (proxy enabled) so requests are same-origin. If you bypass the proxy, cross-site cookies may be blocked.
+
+Production notes (do not use these dev settings in production)
+- Use HTTPS and set `cookie.setSecure(true)` so cookies are marked `Secure` and `SameSite=None`.
+- Replace `jwt.secret` with a strong secret and consider refresh tokens / revocation.
+
+If you want me to: add a small integration test for the auth endpoints, containerize the backend, or re-enable item endpoints, tell me which option and I will proceed.
 ## Steps to run mobile app
-
-- The `mobile/` folder is a placeholder for the mobile client. If you have an existing mobile project, ensure its API base URL points to `http://<host>:8080` and that it attaches an `Authorization: Bearer <token>` header for protected endpoints.
-
-## API endpoints
-
-Authentication
-- `POST /api/auth/register` — register a new user
-	- Request JSON: `{ "name": "...", "email": "...", "password": "..." }`
-	- Response 200: `{ "token": "...", "name": "...", "email": "..." }`
-	- Possible errors: 400 (validation), 409 (email exists)
-
-- `POST /api/auth/login` — login existing user
-	- Request JSON: `{ "email": "...", "password": "..." }`
-	- Response 200: `{ "token": "...", "name": "...", "email": "..." }`
-	- Possible errors: 400 (validation), 401 (invalid credentials)
-
-Protected endpoints (require `Authorization: Bearer <token>`)
-- `GET /api/items` — list items
-- `GET /api/items/{id}` — item details
-- `POST /api/items` — create item
-- `PUT /api/items/{id}` — update item
-- `DELETE /api/items/{id}` — delete item
-
-Note: The above item endpoints are scaffolded on the frontend; implement the corresponding controllers/repositories in `backend/` if not already present.
-
-## Dev notes
-
-- For local development `spring.jpa.hibernate.ddl-auto=update` is enabled (creates/updates schema). Switch to migrations (Flyway/Liquibase) for production.
-- Change `jwt.secret` in `backend/src/main/resources/application.properties` to a long random value before deploying.
-- CORS is configured to allow the frontend origin by default (`http://localhost:5174`).
-
----
-
-If you want, I can: add a Dockerfile for the backend, wire the item controllers on the backend to match the frontend, or implement logout and attaching Authorization headers for all frontend API calls. Which should I do next?
