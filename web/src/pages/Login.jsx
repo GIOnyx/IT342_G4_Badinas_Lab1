@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('')
@@ -8,18 +8,18 @@ export default function Login({ onLogin }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3060'
-    // call backend login
-    fetch(`${API_URL}/api/auth/login`, {
+    // call backend login (use dev proxy or same-origin)
+    fetch(`/api/auth/login`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     })
     .then(async r => {
       const body = await r.json().catch(() => ({}))
-      if (r.ok && body.token) {
-        const user = { name: body.name, email: body.email, token: body.token }
-        localStorage.setItem('token', body.token)
+      if (r.ok) {
+        const user = { name: body.name, email: body.email }
+        // token is stored as HttpOnly cookie now; do not persist in localStorage
         onLogin(user)
         navigate('/dashboard')
       } else {
@@ -31,17 +31,26 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="page container">
-      <h2>Login</h2>
-      <form className="form" onSubmit={handleSubmit}>
-        <label>Email
-          <input value={email} onChange={e => setEmail(e.target.value)} type="email" required />
-        </label>
-        <label>Password
-          <input value={password} onChange={e => setPassword(e.target.value)} type="password" required />
-        </label>
-        <button type="submit">Sign in</button>
-      </form>
+    <div className="auth-page">
+      <div className="auth-content">
+        <div className="auth-side">
+          <h1 className="brand">MiniApp</h1>
+          <p className="lead">Welcome to MiniApp — a tiny demo application. Sign in to access your dashboard and items.</p>
+        </div>
+        <div className="auth-card">
+          <h2>Login</h2>
+          <form className="form" onSubmit={handleSubmit}>
+            <label>Email
+              <input value={email} onChange={e => setEmail(e.target.value)} type="email" required />
+            </label>
+            <label>Password
+              <input value={password} onChange={e => setPassword(e.target.value)} type="password" required />
+            </label>
+            <button type="submit">Sign in</button>
+          </form>
+          <div className="auth-switch">Don't have an account? <Link to="/register">Register</Link></div>
+        </div>
+      </div>
     </div>
   )
 }

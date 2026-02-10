@@ -17,7 +17,7 @@ public class JwtUtil {
     @Value("${jwt.secret:change_this_secret_to_strong_value}")
     private String secret;
 
-    @Value("${jwt.expiration-ms:86400000}") // 1 day default
+    @Value("${jwt.expiration:86400000}") // 1 day default
     private long expirationMs;
 
     private SecretKey key;
@@ -50,5 +50,9 @@ public class JwtUtil {
     public String extractUsername(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public long getExpirationMs() {
+        return expirationMs;
     }
 }
