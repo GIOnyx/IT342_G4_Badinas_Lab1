@@ -36,8 +36,6 @@ public class SecurityConfig {
             // For now allow frame options for H2 console (if used)
             .headers().frameOptions().sameOrigin();
 
-        // TODO: add JWT filter before UsernamePasswordAuthenticationFilter
-
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
