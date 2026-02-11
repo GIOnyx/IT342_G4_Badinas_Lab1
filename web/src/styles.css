@@ -16,6 +16,17 @@
 .nav-user { margin-right:0.5rem; color: rgba(255,255,255,0.9) }
 .link-btn { background:none; border:none; color: rgba(255,255,255,0.95); cursor:pointer }
 
+/* Primary button used in Dashboard */
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: .6rem 1rem;
+  border-radius: .35rem;
+  cursor: pointer;
+}
+.primary-btn:hover { opacity: .95 }
+
 .container { max-width:1100px; margin:2rem auto; padding:0 1rem }
 .page h2 { margin-top:0 }
 .form { display:flex; flex-direction:column; gap:0.75rem; max-width:420px; margin-top:1rem }
