@@ -153,16 +153,4 @@ Troubleshooting
 - If the backend cannot connect to MySQL, verify the database server is running and credentials in `application.properties` are correct.
 
 -------------------------
-Next steps / suggestions
 
-- Add integration tests for auth endpoints using Spring Boot test slices.
-- Containerize backend with Docker and add a `docker-compose` file to run MySQL + backend + frontend.
-
--------------------------
-If you'd like, I can also:
-- create a SQL dump file under `backend/db/` for import
-- add environment-specific config examples (e.g., `application-dev.properties`)
-- add a `docker-compose.yml` to simplify local environment setup
-
----
-Updated to include full run and DB setup instructions. If you want any of the optional extras, tell me which and I'll add them.
