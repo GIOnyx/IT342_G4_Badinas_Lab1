@@ -75,6 +75,41 @@ public class AuthController {
         return ResponseEntity.status(401).body(null);
     }
 
+    // ── PKCE endpoints ────────────────────────────────────────────────────────
+
+    /**
+     * Step 1 — Authorization: validate credentials and return a one-time
+     * authorization code.  The code_challenge (S256) is stored server-side
+     * and matched against the code_verifier in /token.
+     */
+    @PostMapping("/authorize")
+    public ResponseEntity<com.example.backend.dto.AuthCodeResponse> authorize(
+            @jakarta.validation.Valid @RequestBody com.example.backend.dto.AuthorizeRequest req) {
+        com.example.backend.dto.AuthCodeResponse resp = authService.authorize(req);
+        return ResponseEntity.ok(resp);
+    }
+
+    /**
+     * Step 2 — Token exchange: verify the authorization code and code_verifier,
+     * then issue a JWT exactly as /login does.
+     */
+    @PostMapping("/token")
+    public ResponseEntity<AuthResponse> token(
+            @jakarta.validation.Valid @RequestBody com.example.backend.dto.TokenRequest req)
+            throws java.security.NoSuchAlgorithmException {
+        AuthResponse resp = authService.exchangeToken(req);
+        jakarta.servlet.http.Cookie cookie =
+                new jakarta.servlet.http.Cookie("token", resp.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge((int) (jwtUtil.getExpirationMs() / 1000));
+        cookie.setSecure(false);
+        AuthResponse body = new AuthResponse(null, resp.getName(), resp.getEmail());
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookieToHeader(cookie))
+                .body(body);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Object> logout() {
         jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("token", "");

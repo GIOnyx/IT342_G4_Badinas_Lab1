@@ -34,7 +34,14 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/logout", "/h2-console/**").permitAll()
+                .requestMatchers(
+                        "/api/auth/register",
+                        "/api/auth/login",
+                        "/api/auth/logout",
+                        "/api/auth/authorize",   // PKCE step 1
+                        "/api/auth/token",       // PKCE step 2
+                        "/h2-console/**"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             // For now allow frame options for H2 console (if used)

@@ -28,6 +28,62 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PkceStore pkceStore;
+
+    // ── PKCE flow ────────────────────────────────────────────────────────────
+
+    /**
+     * PKCE step 1: validate credentials, store the code_challenge, and return a
+     * short-lived single-use authorization code.
+     */
+    public com.example.backend.dto.AuthCodeResponse authorize(
+            com.example.backend.dto.AuthorizeRequest req) {
+        User u = userRepository.findByEmail(req.getEmail())
+                .orElseThrow(() -> new com.example.backend.exception.InvalidCredentialsException(
+                        "Invalid email or password"));
+        if (!passwordEncoder.matches(req.getPassword(), u.getPassword())) {
+            throw new com.example.backend.exception.InvalidCredentialsException(
+                    "Invalid email or password");
+        }
+        if (!"S256".equals(req.getCodeChallengeMethod())) {
+            throw new IllegalArgumentException("Only S256 code_challenge_method is supported");
+        }
+        String code = pkceStore.store(u.getEmail(), req.getCodeChallenge());
+        return new com.example.backend.dto.AuthCodeResponse(code);
+    }
+
+    /**
+     * PKCE step 2: consume the authorization code, verify the code_verifier
+     * against the stored code_challenge, and issue a JWT.
+     */
+    public AuthResponse exchangeToken(
+            com.example.backend.dto.TokenRequest req) throws java.security.NoSuchAlgorithmException {
+        PkceStore.Entry entry = pkceStore.consume(req.getCode());
+        if (entry == null) {
+            throw new com.example.backend.exception.InvalidCredentialsException(
+                    "Invalid or expired authorization code");
+        }
+        // RFC 7636 §4.6: verify BASE64URL(SHA-256(ASCII(code_verifier))) == code_challenge
+        java.security.MessageDigest digest =
+                java.security.MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(
+                req.getCodeVerifier().getBytes(java.nio.charset.StandardCharsets.US_ASCII));
+        String computed = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(hash);
+        if (!computed.equals(entry.codeChallenge)) {
+            throw new com.example.backend.exception.InvalidCredentialsException(
+                    "PKCE code_verifier mismatch");
+        }
+        User u = userRepository.findByEmail(entry.email)
+                .orElseThrow(() -> new com.example.backend.exception.InvalidCredentialsException(
+                        "User not found"));
+        String token = jwtUtil.generateToken(u.getEmail());
+        return new AuthResponse(token, u.getName(), u.getEmail());
+    }
+
+    // ── Standard auth ─────────────────────────────────────────────────────────
+
     public AuthResponse register(RegisterRequest req) {
         Optional<User> exists = userRepository.findByEmail(req.getEmail());
         if (exists.isPresent()) {
