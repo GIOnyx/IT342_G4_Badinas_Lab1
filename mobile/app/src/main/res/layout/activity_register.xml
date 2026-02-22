@@ -48,5 +48,16 @@
             android:text="Create account"
             android:layout_marginTop="16dp" />
 
+        <TextView
+            android:id="@+id/goToLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? Sign In"
+            android:textColor="?attr/colorPrimary"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp" />
+
     </LinearLayout>
 </ScrollView>
