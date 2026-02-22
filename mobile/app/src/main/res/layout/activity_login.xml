@@ -38,8 +38,19 @@
             android:id="@+id/signInBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in"
+            android:text="Sign In"
             android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/goToRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account? Sign Up"
+            android:textColor="?attr/colorPrimary"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp" />
 
     </LinearLayout>
 </ScrollView>
