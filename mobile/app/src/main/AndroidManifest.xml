@@ -27,11 +27,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".RegisterActivity"
+            android:parentActivityName=".LoginActivity" />
         <activity android:name=".DashboardActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".DashboardActivity" />
     </application>
 
 </manifest>
